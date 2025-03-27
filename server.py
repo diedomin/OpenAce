@@ -63,8 +63,8 @@ def play(content_id):
 @app.route("/")
 def root():
     logging.info("Application status check.")
-    return "AceStream Proxy is running"
+    return "OpenAce is running"
 
 if __name__ == "__main__":
-    logging.info("🚀 Starting AceStream Proxy")
+    logging.info("🚀 Starting OpenAce")
     app.run(host="0.0.0.0", port=8888)
