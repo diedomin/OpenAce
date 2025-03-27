@@ -1,0 +1,7 @@
+---
+```gitignore
+__pycache__/
+*.pyc
+*.log
+.env
+gluetun-data/

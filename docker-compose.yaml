@@ -1,0 +1,47 @@
+services:
+  acestream-vpn:
+    container_name: acestream-vpn
+    image: qmcgaw/gluetun:latest
+    devices:
+      - /dev/net/tun:/dev/net/tun
+    cap_add:
+      - NET_ADMIN
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - VPN_PORT_FORWARDING=on
+      - VPN_SERVICE_PROVIDER=custom
+      - VPN_TYPE=wireguard
+      - WIREGUARD_ENDPOINT_IP=${VPN_ENDPOINT_IP}
+      - WIREGUARD_ENDPOINT_PORT=${VPN_ENDPOINT_PORT}
+      - WIREGUARD_PUBLIC_KEY=${WG_PUBLIC_KEY}
+      - WIREGUARD_PRIVATE_KEY=${WG_PRIVATE_KEY}
+      - VPN_PORT_FORWARDING_PROVIDER=protonvpn
+      - WIREGUARD_ADDRESSES=${WG_ADDRESSES}
+      - VPN_DNS_ADDRESS=${VPN_DNS_ADDRESS}
+      - TZ=Europe/Madrid
+      - UPDATER_PERIOD=2h
+    volumes:
+      - ./gluetun-data:/tmp/gluetun
+    ports:
+      - 8888:8888
+    networks:
+      - acestream-net
+    restart: always
+
+  open-ace:
+    image: diedomin/open-ace:latest
+    container_name: open-ace
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+    depends_on:
+      - acestream-vpn
+    volumes:
+      - ./gluetun-data:/tmp/gluetun
+    network_mode: service:acestream-vpn
+    restart: "unless-stopped"
+
+networks:
+  acestream-net:
+    name: acestream-net

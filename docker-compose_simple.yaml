@@ -1,0 +1,12 @@
+services:
+  open-ace:
+    image: diedomin/open-ace:latest
+    container_name: open-ace
+    ports:
+      - "8888:8888"
+    networks:
+      - acestream-net
+
+networks:
+  acestream-net:
+    name: acestream-net
