@@ -31,7 +31,7 @@ docker compose up -d
 
 Make sure you provide the necessary Gluetun environment variables in an `.env` file.
 
-For more information, please refer to:
+For more information, please refer to [Gluetun VPN](https://github.com/qdm12/gluetun).
 
 ---
 
