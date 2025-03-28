@@ -10,7 +10,7 @@
 
 - ✅ AceStream Engine + Proxy in one single container
 - 🔄 Optional WireGuard VPN support (perfect with Gluetun)
-- 🚪 Automatic port forwarding support with some VPN providers such as Proton VPN (not all plans
+- 🚪 Automatic port forwarding support with some VPN providers such as Proton VPN (not all plans)
 - 🧠 Smart startup script to detect VPN mode or fallback
 
 ---
