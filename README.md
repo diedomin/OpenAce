@@ -10,7 +10,7 @@
 
 - ✅ AceStream Engine + Proxy in one single container
 - 🔄 Optional WireGuard VPN support (perfect with Gluetun)
-- 🚪 Automatic port forwarding support with some VPN providers such as Proton VPN (not all plans
+- 🚪 Automatic port forwarding support with some VPN providers such as Proton VPN (not all plans)
 - 🧠 Smart startup script to detect VPN mode or fallback
 
 ---
@@ -31,7 +31,7 @@ docker compose up -d
 
 Make sure you provide the necessary Gluetun environment variables in an `.env` file.
 
-For more information, please refer to:
+For more information, please refer to [Gluetun VPN](https://github.com/qdm12/gluetun).
 
 ---
 
