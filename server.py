@@ -3,14 +3,14 @@ import requests
 import time
 import os
 import logging
+import logging_config
+
+logging_config.configure_logging()
 
 app = Flask("OpenAce")
 
-logging.basicConfig(level=logging.INFO, format='%(asctime)s [%(levelname)s] %(message)s')
-
 ACESTREAM_HOST = os.getenv("ACESTREAM_HOST", "127.0.0.1")
 ACESTREAM_PORT = os.getenv("ACESTREAM_PORT", "6878")
-
 ACESTREAM_ENGINE = f"http://{ACESTREAM_HOST}:{ACESTREAM_PORT}"
 
 @app.route("/play/<content_id>")
@@ -22,7 +22,7 @@ def play(content_id):
         try:
             r = requests.get(start_url, stream=True, timeout=(5, 60))
             if r.status_code == 200:
-                logging.info(f"✅ Stream available (attempt {i+1})")
+                logging.info(f"Stream available (attempt {i+1})")
 
                 def generate():
                     total_bytes = 0
@@ -36,24 +36,24 @@ def play(content_id):
                             total_bytes += len(chunk)
 
                             if total_bytes >= 5*1024*1024 or (time.time() - last_log_time) > 60:
-                                logging.info(f"📡 Transmitted {total_bytes / (1024*1024):.2f} MB so far")
+                                logging.info(f"Transmitted {total_bytes / (1024*1024):.2f} MB so far")
                                 total_bytes = 0
                                 last_log_time = time.time()
 
                     except requests.exceptions.ReadTimeout:
-                        logging.error("❌ Read timeout from AceStream server")
+                        logging.error("Read timeout from AceStream server")
                     except Exception as e:
-                        logging.error(f"❌ Unexpected error during transmission: {e}")
+                        logging.error(f"Unexpected error during transmission: {e}")
                     finally:
-                        logging.info("🔌 Transmission with AceStream ended")
+                        logging.info("Transmission with AceStream ended")
 
                 return Response(generate(), content_type='video/mp2t')
 
             else:
-                logging.warning(f"⚠️ Attempt {i+1}: unexpected status code {r.status_code}")
+                logging.warning(f"Attempt {i+1}: unexpected status code {r.status_code}")
 
         except Exception as e:
-            logging.warning(f"⚠️ Attempt {i+1} failed: {e}")
+            logging.warning(f"Attempt {i+1} failed: {e}")
 
         time.sleep(1.5)
 
@@ -66,5 +66,5 @@ def root():
     return "OpenAce is running"
 
 if __name__ == "__main__":
-    logging.info("🚀 Starting OpenAce")
+    logging.info("Starting OpenAce")
     app.run(host="0.0.0.0", port=8888)

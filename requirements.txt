@@ -1,0 +1,12 @@
+pycryptodome
+lxml
+apsw
+psutil
+pynacl
+iso8601
+aiohttp
+flask
+requests
+gunicorn
+gevent
+python-json-logger
