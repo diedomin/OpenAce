@@ -14,7 +14,7 @@ for i in {1..30}; do
     echo "✅ Port successfully retrieved from Gluetun: $PORT"
     break
   fi
-  echo "⏳ Gluetun hasn't provided a port yet, waiting... ($i/30)"
+  echo "⏳ Gluetun hasn't provided a port yet, waiting... ($i/20)"
   sleep 1
 done
 
