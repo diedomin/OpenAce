@@ -2,9 +2,10 @@ import logging
 import logging.handlers
 import os
 import sys
+from pythonjsonlogger import jsonlogger
 
 LOG_DIR = "/var/log/openace"
-LOG_FILE = os.path.join(LOG_DIR, "proxy.log")  # Usamos proxy.log para los logs de la aplicación
+LOG_FILE = os.path.join(LOG_DIR, "proxy.log")
 
 os.makedirs(LOG_DIR, exist_ok=True)
 
@@ -12,18 +13,19 @@ def configure_logging():
     logger = logging.getLogger()
     logger.setLevel(logging.INFO)
 
-    formatter = logging.Formatter('%(asctime)s [%(levelname)s] %(message)s')
+    # Json format for logs
+    log_format = '%(asctime)s %(levelname)s %(name)s %(message)s'
+    json_formatter = jsonlogger.JsonFormatter(log_format)
 
-    # RotatingFileHandler para los logs de la aplicación
+    # RotatingFileHandler
     file_handler = logging.handlers.RotatingFileHandler(
         LOG_FILE, maxBytes=5 * 1024 * 1024, backupCount=2
     )
-    file_handler.setFormatter(formatter)
+    file_handler.setFormatter(json_formatter)
 
     stream_handler = logging.StreamHandler(sys.stdout)
-    stream_handler.setFormatter(formatter)
+    stream_handler.setFormatter(json_formatter)
 
-    # Limpiar los handlers anteriores y configurar los nuevos
     logger.handlers = []
     logger.addHandler(file_handler)
     logger.addHandler(stream_handler)
