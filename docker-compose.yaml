@@ -38,7 +38,8 @@ services:
     depends_on:
       - acestream-vpn
     volumes:
-      - ./gluetun-data:/tmp/gluetun
+      - ./gluetun-data:/tmp/gluetun #OPTIONAL
+      - ./your_log_path/logs:/var/log/openace #OPTIONAL
     network_mode: service:acestream-vpn
     restart: "unless-stopped"
 
