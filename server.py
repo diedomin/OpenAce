@@ -3,14 +3,14 @@ import requests
 import time
 import os
 import logging
+import logging_config
+
+logging_config.configure_logging()
 
 app = Flask("OpenAce")
 
-logging.basicConfig(level=logging.INFO, format='%(asctime)s [%(levelname)s] %(message)s')
-
 ACESTREAM_HOST = os.getenv("ACESTREAM_HOST", "127.0.0.1")
 ACESTREAM_PORT = os.getenv("ACESTREAM_PORT", "6878")
-
 ACESTREAM_ENGINE = f"http://{ACESTREAM_HOST}:{ACESTREAM_PORT}"
 
 @app.route("/play/<content_id>")

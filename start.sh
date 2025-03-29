@@ -1,6 +1,9 @@
 #!/bin/bash
 set -e
 
+# Start cron daemon
+cron
+
 FORWARDED_PORT_FILE="/tmp/gluetun/forwarded_port"
 
 # ⏳ Wait until the file exists and has content (max 30 seconds)
@@ -23,7 +26,7 @@ fi
 
 # 🟢 Start AceStream engine in the background
 echo "🚀 Starting AceStream on port $PORT..."
-/app/start-engine --client-console --port "$PORT" &
+/app/start-engine --client-console --port "$PORT" >> /var/log/openace/acestream.log 2>&1 &
 
 # 🟢 Start proxy in the foreground
 exec gunicorn --worker-class gevent --bind 0.0.0.0:8888 --timeout 3600 server:app
