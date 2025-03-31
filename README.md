@@ -1,21 +1,21 @@
-# 🎬 OpenAce
+# OpenAce
 
-**OpenAce** is a lightweight, all-in-one Docker image that bundles the AceStream engine and a modern HTTP proxy to easily stream content over HTTP — with or without a VPN.
+**OpenAce** is an all-in-one Docker image. The proxy acts as an intermediary between an app and the AceStream engine. The `/play/<content_id>` endpoint relays the MPEG-TS stream directly. It is useful for clients that support streaming, such as Jellyfin, Plex, etc. The `/hls/<content_id>` endpoint transforms that stream into HLS format (playlist `.m3u8` and `.ts` segments), allowing compatibility with players and servers such as Jellyfin, Plex, etc. Both handle retries, errors, and logging for more robust content delivery.
 
-> 🔧 > Designed to integrate Acestream engine over servers such as Jellyfin or Plex.
-
----
-
-## 🌐 Features
-
-- ✅ AceStream Engine + Proxy in one single container
-- 🔄 Optional WireGuard VPN support (perfect with Gluetun)
-- 🚪 Automatic port forwarding support with some VPN providers such as Proton VPN (not all plans)
-- 🧠 Smart startup script to detect VPN mode or fallback
+> > Designed to integrate the AceStream engine with servers such as Jellyfin or Plex.
 
 ---
 
-## 🚀 Getting Started
+## Features
+
+- AceStream Engine + Proxy in a single container
+- Optional VPN support (perfect with Gluetun)
+- Automatic port forwarding support with some VPN providers such as Proton VPN (not all plans)
+- Smart startup script that detects VPN mode or falls back to default settings
+
+---
+
+## Getting Started
 
 ### Option 1: Simple (no VPN)
 
@@ -35,34 +35,36 @@ For more information, please refer to [Gluetun VPN](https://github.com/qdm12/glu
 
 ---
 
-## 🧾 Folder structure
+## Usage
 
-```
-open-ace/
-├── Dockerfile               # Builds the full image
-├── docker-compose.yaml      # VPN + Port Forwarding setup
-├── docker-compose_simple.yaml # Simple setup (no VPN)
-├── server.py                # Flask proxy for AceStream
-├── start.sh                 # Smart entrypoint script
-├── README.md                # You're reading it
-└── .env                     # Secrets and WireGuard config (not included)
-```
-
----
-
-## 📡 Usage
-
-- AceStream is exposed **internally** on port `6878`
+- AceStream is exposed **internally** on port `6878`, but you can access the
+  AceStream engine directly by exposing port 6878 of the container.
 - The HTTP Proxy is exposed on port `8888` (defined in `docker-compose.yaml`)
 - Use the proxy like this:
 
 ```
+# For MPEG-TS streaming
 http://<your-server>:8888/play/<acestream_content_id>
+
+# For HLS streaming
+http://<your-server>:8888/hls/<acestream_content_id>
+```
+
+You can use this with servers such as Jellyfin via the "Live TV" function, simply by providing an `.m3u` file with the available streams, for example like this:
+
+```
+#EXTM3U
+
+#EXTINF:-1 tvg-id="" tvg-name="NAME" group-title="Group",
+http://<your-server>:8888/play/yourcontentid
+
+#EXTINF:-1 tvg-id="" tvg-name="NAME" group-title="Group",
+http://<your-server>:8888/play/yoursecondcontentid
 ```
 
 ---
 
-## 🧠 How It Works
+## How It Works
 
 - On startup, `start.sh` checks if a Gluetun forwarded port is available.
 - If detected, AceStream is launched using that port.
@@ -71,7 +73,7 @@ http://<your-server>:8888/play/<acestream_content_id>
 
 ---
 
-## 📦 Build the image
+## Build the image
 
 ```bash
 docker build -t open-ace .
@@ -79,15 +81,15 @@ docker build -t open-ace .
 
 ---
 
-## 🛠 Development tips
+## Development tips
 
 - You can use the image as-is.
 - Or mount your own `start.sh` via volume to customize the startup behavior.
-- Logs are printed via stdout, so `docker logs -f open-ace` works perfectly.
+- Logs are printed via stdout and also written to log files, so `docker logs -f open-ace` works perfectly, as does `tail -f /your-path/proxy.log` or ingesting them into a log server like OpenSearch.
 
 ---
 
-## 🤝 Contributing
+## Contributing
 
 Got a cool idea? Found a bug?
 
@@ -97,12 +99,12 @@ Got a cool idea? Found a bug?
 
 ---
 
-## 🪪 License
+## License
 
 MIT — use it freely, fork it, break it, improve it.
 
 ---
 
-## ⭐️ Like this project?
+## Like this project?
 
-Spread the word. Star the repo.
+Spread the word. Star the repo and share it with others!
