@@ -2,7 +2,7 @@ FROM python:3.10-slim
 
 ENV DEBIAN_FRONTEND=noninteractive
 
-WORKDIR /app
+WORKDIR /openace
 
 # System dependencies
 RUN apt update && apt install -y --no-install-recommends \
@@ -18,10 +18,10 @@ RUN wget -q "https://download.acestream.media/linux/acestream_3.2.3_ubuntu_22.04
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy proxy, startup script, and logrotate config
+# Copy app, startup script, and logrotate config
+COPY app/ /openace/app/
 COPY server.py .
 COPY start.sh .
-COPY logging_config.py .
 COPY logrotate/acestream.conf /etc/logrotate.d/acestream
 
 
@@ -30,18 +30,14 @@ RUN chmod 644 /etc/logrotate.d/acestream && \
     mkdir -p /var/log/openace && \
     touch /var/log/openace/acestream.log && \
     touch /var/log/openace/proxy.log && \
-    chmod 644 /var/log/openace/*.log
+    chmod 644 /var/log/openace/*.log && \
+    chmod +x /openace/start.sh
 
 # Create cron job for logrotate
 RUN echo "0 0 * * * /usr/sbin/logrotate /etc/logrotate.conf" > /etc/cron.d/openace && \
     chmod 0644 /etc/cron.d/openace && \
     crontab /etc/cron.d/openace
 
-# Make sure the script is executable
-RUN chmod +x /app/start.sh
-
-# Expose only the proxy port
 EXPOSE 8888
 
-# Launch script that handles port forwarding if needed
-ENTRYPOINT ["/app/start.sh"]
+ENTRYPOINT ["/openace/start.sh"]

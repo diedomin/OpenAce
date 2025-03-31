@@ -7,7 +7,7 @@ cron
 FORWARDED_PORT_FILE="/tmp/gluetun/forwarded_port"
 
 # Wait until the file exists and has content (max 20 seconds)
-echo "🔍 Looking for Gluetun port file: $FORWARDED_PORT_FILE"
+echo "Looking for Gluetun port file: $FORWARDED_PORT_FILE"
 for i in {1..20}; do
   if [[ -s "$FORWARDED_PORT_FILE" ]]; then
     PORT=$(cat "$FORWARDED_PORT_FILE")
@@ -26,7 +26,9 @@ fi
 
 # Start AceStream engine in the background
 echo "Starting AceStream on port $PORT..."
-/app/start-engine --client-console --port "$PORT" >> /var/log/openace/acestream.log 2>&1 &
+/openace/start-engine --client-console --port "$PORT" >> /var/log/openace/acestream.log 2>&1 &
+
+export PYTHONPATH=/openace
 
 # Start proxy in the foreground
-exec gunicorn --worker-class gevent --bind 0.0.0.0:8888 --timeout 3600 server:app
+exec gunicorn --chdir /openace --worker-class gevent --bind 0.0.0.0:8888 --timeout 3600 server:app

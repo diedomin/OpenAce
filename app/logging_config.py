@@ -13,11 +13,9 @@ def configure_logging():
     logger = logging.getLogger()
     logger.setLevel(logging.INFO)
 
-    # Json format for logs
-    log_format = '%(asctime)s %(levelname)s %(name)s %(message)s'
+    log_format = '%(timestamp)s %(level)s %(component)s %(event)s %(message)s'
     json_formatter = jsonlogger.JsonFormatter(log_format)
 
-    # RotatingFileHandler
     file_handler = logging.handlers.RotatingFileHandler(
         LOG_FILE, maxBytes=5 * 1024 * 1024, backupCount=2
     )
