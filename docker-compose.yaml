@@ -37,6 +37,8 @@ services:
       - NET_RAW
     depends_on:
       - acestream-vpn
+    environment:
+      - IPTV_SERVERS=server1.com:80,server2.com:443,server3.xyz:80 #Only for IPTV servers
     volumes:
       - ./gluetun-data:/tmp/gluetun #OPTIONAL
       - ./your_log_path/logs:/var/log/openace #OPTIONAL

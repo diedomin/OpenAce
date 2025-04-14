@@ -1,8 +1,8 @@
 # OpenAce
 
-**OpenAce** is an all-in-one Docker image. The proxy acts as an intermediary between an app and the AceStream engine. The `/play/<content_id>` endpoint relays the MPEG-TS stream directly. It is useful for clients that support streaming, such as Jellyfin, Plex, etc. The `/hls/<content_id>` endpoint transforms that stream into HLS format (playlist `.m3u8` and `.ts` segments), allowing compatibility with players and servers such as Jellyfin, Plex, etc. Both handle retries, errors, and logging for more robust content delivery.
+**OpenAce** is an all-in-one Docker image. The proxy acts as an intermediary between an app and the AceStream engine or the IPTV server. The `/play/<content_id>` endpoint relays the MPEG-TS stream directly. It is useful for clients that support streaming, such as Jellyfin, Plex, etc. The `/hls/<content_id>` endpoint transforms that stream into HLS format (playlist `.m3u8` and `.ts` segments), allowing compatibility with players and servers such as Jellyfin, Plex, etc. The `/iptv/<seg1>/<seg2>/<seg3>` allows you to connect to your IPTV server over VPN, it can handle multiple IPTV servers in a single m3u list. All endpoints handle retries, errors, and logging for more robust content delivery.
 
-> > Designed to integrate the AceStream engine with servers such as Jellyfin or Plex.
+> > Designed to integrate the AceStream engine and some IPTV services with servers such as Jellyfin or Plex.
 
 ---
 
@@ -12,6 +12,7 @@
 - Optional VPN support (perfect with Gluetun)
 - Automatic port forwarding support with some VPN providers such as Proton VPN (not all plans)
 - Smart startup script that detects VPN mode or falls back to default settings
+- Multiple IPTV servers in one list
 
 ---
 
@@ -48,6 +49,9 @@ http://<your-server>:8888/play/<acestream_content_id>
 
 # For HLS streaming
 http://<your-server>:8888/hls/<acestream_content_id>
+
+# For IPTV streaming
+http://<your-server>:8888/iptv/<seg1>/<seg2>/<seg3>
 ```
 
 You can use this with servers such as Jellyfin via the "Live TV" function, simply by providing an `.m3u` file with the available streams, for example like this:
@@ -59,7 +63,10 @@ You can use this with servers such as Jellyfin via the "Live TV" function, simpl
 http://<your-server>:8888/play/yourcontentid
 
 #EXTINF:-1 tvg-id="" tvg-name="NAME" group-title="Group",
-http://<your-server>:8888/play/yoursecondcontentid
+http://<your-server>:8888/hls/yoursecondcontentid
+
+#EXTINF:-1 tvg-id="" tvg-name="NAME" group-title="Group",
+http://<your-server>:8888/iptv/<seg1>/<seg2>/<seg3>
 ```
 
 ---
