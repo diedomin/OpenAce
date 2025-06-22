@@ -1,5 +1,9 @@
 # OpenAce
 
+<p align="center">
+  <img src="images/logo.png" alt="Logo" width="150"/>
+</p>
+
 **OpenAce** is an all-in-one Docker image. The proxy acts as an intermediary between an app and the AceStream engine. The `/play/<content_id>` endpoint relays the MPEG-TS stream directly. It is useful for clients that support streaming, such as Jellyfin, Plex, etc. The `/hls/<content_id>` endpoint transforms that stream into HLS format (playlist `.m3u8` and `.ts` segments), allowing compatibility with players and servers such as Jellyfin, Plex, etc. Both handle retries, errors, and logging for more robust content delivery.
 
 > > Designed to integrate the AceStream engine with servers such as Jellyfin or Plex.
